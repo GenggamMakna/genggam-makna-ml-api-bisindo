@@ -5,3 +5,4 @@ tensorflow==2.18.0
 pillow==10.1.0
 numpy==1.26.2
 python-dotenv
+tqdm
