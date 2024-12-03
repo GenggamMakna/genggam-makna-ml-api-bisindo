@@ -26,14 +26,12 @@ def preprocess_image(img_file):
     :return: Preprocessed numpy array
     """
     
-    img = Image.open(img_file).convert("RGB")
-    
+    img = Image.open(img_file)
     img = img.resize((200, 200))
-    
+
     img_array = image.img_to_array(img)
-    
-    img_array = np.expand_dims(img_array, axis=-1)
     img_array = np.expand_dims(img_array, axis=0)
+    img_array = img_array.astype('float32') / 255.0 
     
     return img_array
 
