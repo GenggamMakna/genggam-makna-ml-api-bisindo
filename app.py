@@ -6,11 +6,15 @@ from tensorflow.keras.preprocessing import image
 from PIL import Image
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import subprocess
+
+print("INFO: Getting Model File...")
+subprocess.run(["python3", "model.py"], check=True)
 
 app = Flask(__name__)
 CORS(app)
 
-model = load_model("sibid_model.h5")
+model = load_model("models/sibid_model.h5")
 
 ALPHABET_MAPPING = [chr(i) for i in range(65, 91) if chr(i) not in ["J", "Z"]]
 

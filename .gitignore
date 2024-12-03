@@ -1,2 +1,4 @@
 genggam-makna-env
-sibid_model.h5
+models
+.secret
+.env
