@@ -28,7 +28,7 @@ def preprocess_image(img_file):
     
     img = Image.open(img_file).convert("RGB")
     
-    img = img.resize((64, 64))
+    img = img.resize((200, 200))
     
     img_array = image.img_to_array(img)
     
