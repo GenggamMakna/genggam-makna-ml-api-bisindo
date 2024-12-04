@@ -26,8 +26,8 @@ def preprocess_image(img_file):
     :return: Preprocessed numpy array
     """
     
-    img = Image.open(img_file)
-    img = img.resize((200, 200))
+    img = Image.open(img_file).convert('RGB')
+    img = img.resize((224, 224))
 
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
