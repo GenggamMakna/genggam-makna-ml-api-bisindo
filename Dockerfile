@@ -8,6 +8,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN mkdir -p models
+
 EXPOSE 8014
 
 CMD ["python3", "app.py"]
