@@ -1,4 +1,4 @@
-FROM python:3.12.3
+FROM python:3.12-alpine
 
 WORKDIR /app
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN mkdir -p models
 
-EXPOSE 8014
+EXPOSE 4014
 
-CMD ["python3", "app.py"]
+CMD ["python3", "./app.py"]
