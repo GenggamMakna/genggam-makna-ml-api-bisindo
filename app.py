@@ -166,7 +166,7 @@ def predict_sign_language_video():
 
         return jsonify({
             'predicted_alphabet': normalized_predictions,
-            'average_confidence': average_confidence
+            'confidence': average_confidence
         })
     
     except Exception as e:
