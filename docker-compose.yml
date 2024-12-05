@@ -1,0 +1,21 @@
+services:
+  genggam-makna-api:
+    image: "vinssdroid/genggam-makna-ml-api:v1"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: genggam-makna-ml-api
+    env_file:
+      - /opt/secrets/genggam-makna-ml-api.env
+    ports:
+      - "4014:4014"
+    networks:
+      - nginx
+    volumes:
+      - /opt/secrets:/opt/secrets
+    command:
+      ["python3", "./app.py"]
+
+networks:
+  nginx:
+    external: true
