@@ -134,3 +134,12 @@ A RESTful API for recognizing sign language from images and videos using a deep 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Contact
+
+For further questions or contributions, please contact:
+- **Name**: Rama Diaz
+- **Website**: [xann.my.id](https://xann.my.id)
+- **Email**: ramadiaz221@gmail.com
