@@ -35,6 +35,12 @@ def preprocess_image(img_file):
     
     return img_array
 
+@app.route('/', methods=['GET'])
+def ping_server():
+    return jsonify({
+        'ping': 'Hello this is Genggam Makna AI!'
+    })
+
 @app.route('/predict/image', methods=['POST'])
 def predict_sign_language():
     """
