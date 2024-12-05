@@ -9,6 +9,9 @@ from flask_cors import CORS
 import subprocess
 import cv2
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 print("INFO: Getting Model File...")
 subprocess.run(["python3", "model.py"], check=True)
 
@@ -179,4 +182,4 @@ def predict_sign_language_video():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=4014)
+    app.run(debug=True, host="0.0.0.0", port=8014)
