@@ -11,6 +11,7 @@ import cv2
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 
 print("INFO: Getting Model File...")
 subprocess.run(["python3", "model.py"], check=True)
