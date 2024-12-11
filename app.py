@@ -19,9 +19,9 @@ subprocess.run(["python3", "model.py"], check=True)
 app = Flask(__name__)
 CORS(app)
 
-model = load_model("models/sibid_model.h5")
+model = load_model("models/bisindo_model.h5")
 
-ALPHABET_MAPPING = [chr(i) for i in range(65, 91) if chr(i) not in ["J", "Z"]]
+ALPHABET_MAPPING = [chr(i) for i in range(65, 91)]
 
 def preprocess_image(img_file):
     """
@@ -32,7 +32,7 @@ def preprocess_image(img_file):
     """
     
     img = Image.open(img_file).convert('RGB')
-    img = img.resize((224, 224))
+    img = img.resize((100, 100))
 
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
@@ -112,7 +112,7 @@ def preprocess_frame(frame):
     :return: Preprocessed numpy array
     """
     img = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)).convert('RGB')
-    img = img.resize((224, 224))
+    img = img.resize((100, 100))
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array = img_array.astype('float32') / 255.0 
@@ -183,4 +183,4 @@ def predict_sign_language_video():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=4014)
+    app.run(debug=True, host="0.0.0.0", port=4015)

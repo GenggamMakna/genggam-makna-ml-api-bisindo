@@ -4,3 +4,4 @@ models
 .env
 .code
 .idea
+venv

@@ -10,6 +10,6 @@ COPY . .
 
 RUN mkdir -p models
 
-EXPOSE 4014
+EXPOSE 4015
 
 CMD ["python3", "./app.py"]
