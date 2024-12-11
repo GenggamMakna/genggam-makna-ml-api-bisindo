@@ -8,7 +8,7 @@ from tensorflow.keras.models import load_model
 load_dotenv()
 model_url = os.getenv("GCLOUD_BUCKET_MODEL_URL")
 
-local_model_path = "models/bisindo_model.h5"
+local_model_path = "models/sibid_model.h5"
 
 if not os.path.exists(local_model_path):
     print("Downloading model...")
