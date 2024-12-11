@@ -6,13 +6,13 @@ services:
       dockerfile: Dockerfile
     container_name: genggam-makna-ml-bisindo-api
     env_file:
-      - /opt/secrets/genggam-makna-ml-bisindo-api.env
+      - /etc/secrets/genggam-makna-ml-bisindo-api.env
     ports:
       - "4015:4015"
     networks:
       - nginx-mailcow-host
     volumes:
-      - /opt/secrets:/opt/secrets
+      - /etc/secrets:/etc/secrets
     command:
       ["python3", "./app.py"]
 
