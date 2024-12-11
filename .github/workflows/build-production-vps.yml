@@ -1,0 +1,103 @@
+name: Production For VPS Build ML API GenggamMakna
+
+on:
+  push:
+    branches:
+      - prod-vps
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+#      - name: Remove old Docker image
+#        run: |
+#          docker rmi -f ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:v1 || true
+#          docker rmi -f ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:${{ github.sha }} || true
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: ./Dockerfile
+          no-cache: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:v1
+            ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:${{ github.sha }}
+
+      - name: Save the private key as a temporary file
+        run: |
+          echo "${{ secrets.VPS_SSH_KEY }}" > private_key
+          chmod 600 private_key
+
+      - name: Remove old Docker image
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "sudo docker rmi -f ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:v1 || true"
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "sudo docker rmi -f ${{ secrets.DOCKER_USERNAME }}/genggam-makna-ml-bisindo-api:${{ github.sha }} || true"
+
+      - name: Copy docker-compose.yml to VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i private_key docker-compose.yml ${VPS_USER}@${VPS_HOST}:/etc/ci-cd/genggam-makna-ml-bisindo-api/docker-compose.yml
+
+      - name: Copy Dockerfile to VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i private_key Dockerfile ${VPS_USER}@${VPS_HOST}:/etc/ci-cd/genggam-makna-ml-bisindo-api/Dockerfile
+
+      - name: Copy requirements.txt to VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i private_key requirements.txt ${VPS_USER}@${VPS_HOST}:/etc/ci-cd/genggam-makna-ml-bisindo-api/requirements.txt
+
+      - name: Stop existing containers on the server
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "sudo docker-compose -f /etc/ci-cd/genggam-makna-ml-bisindo-api/docker-compose.yml down"
+
+      - name: Delete old containers on server
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "
+            sudo docker ps -a -q -f "name=genggam-makna-ml-bisindo-api" | xargs -r docker rm
+          "
+
+      - name: Run SSH commands to update and run Docker Compose on VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} sudo docker-compose -f /etc/ci-cd/genggam-makna-ml-bisindo-api/docker-compose.yml up -d --force-recreate --remove-orphans"
+
+      - name: Check container status
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${VPS_USER}@${VPS_HOST} "sudo docker ps"
