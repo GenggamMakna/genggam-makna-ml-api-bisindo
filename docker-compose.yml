@@ -1,14 +1,14 @@
 services:
   genggam-makna-api:
-    image: "vinssdroid/genggam-makna-ml-api:v1"
+    image: "genggam-makna-ml-bisindo-api:v1.gcp"
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: genggam-makna-ml-api
+    container_name: genggam-makna-ml-bisindo-api
     env_file:
-      - /opt/secrets/genggam-makna-ml-api.env
+      - /opt/secrets/genggam-makna-ml-bisindo-api.env
     ports:
-      - "4014:4014"
+      - "4015:4015"
     networks:
       - nginx
     volumes:
