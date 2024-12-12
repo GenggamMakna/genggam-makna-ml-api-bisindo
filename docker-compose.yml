@@ -1,6 +1,6 @@
 services:
   genggam-makna-api:
-    image: "genggam-makna-ml-bisindo-api:v1.gcp"
+    image: "vinssdroid/genggam-makna-ml-bisindo-api:v1.gcp"
     build:
       context: .
       dockerfile: Dockerfile
